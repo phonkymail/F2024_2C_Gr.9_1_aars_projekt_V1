@@ -1,0 +1,34 @@
+import threading
+import time
+from ultra import DistanceSensor
+from led import LedRGB
+from rpi_ws281x import Color
+
+#--------------------------------------pin
+TRIGGER_PIN = 15
+ECHO_PIN = 14
+
+#-------------------------------------object
+sensor_ult = DistanceSensor(TRIGGER_PIN, ECHO_PIN)
+led_rgb = LedRGB()
+
+#-------------------------------------function
+def close_led():
+    while True:
+        distance = sensor_ult.measure_distance()
+        if distance < 80:
+            led_rgb.set_color(Color(255, 255, 255))  
+        else:
+            led_rgb.set_color(Color(0, 0, 0)) 
+        time.sleep(3)
+
+#-------------------------------------threading
+close_led_thread = threading.Thread(target=close_led)
+close_led_thread.start()
+
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    print("Stopping the script...")
+    close_led_thread.join()
