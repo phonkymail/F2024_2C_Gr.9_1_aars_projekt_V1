@@ -13,7 +13,7 @@ client_id = "vm"
 
 save_directory = "/home/rav/Desktop/projekt/new"
 imagebase_folder = "/home/rav/Desktop/projekt/imagebase"
-intruder_folder = "/home/rav/Desktop/projekt/intruz"
+intruder_folder = "/home/rav/Desktop/projekt/intruder"
 os.makedirs(save_directory, exist_ok=True)
 os.makedirs(imagebase_folder, exist_ok=True)
 os.makedirs(intruder_folder, exist_ok=True)
