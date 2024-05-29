@@ -1,0 +1,47 @@
+Programbeskrivelse
+Dette program er en ansigtsgenkendelsessystem designet til at administrere og identificere brugere og indtrængere i et smart låsesystem. 
+Programmet bruger flere Python-moduler til at håndtere billedgenkendelse, databaseoperationer og MQTT-kommunikation.
+
+Moduler
+os: Bruges til fil- og mappemanipulation.
+base64: Bruges til at dekode base64-enkodede billeder.
+paho.mqtt.client: Bruges til at oprette forbindelse til og kommunikere med en MQTT-broker.
+datetime: Bruges til at håndtere dato og tid.
+face_recognition: Bruges til at genkende ansigter i billeder.
+Flask: Et mikro-webframework brugt til at skabe webapplikationen.
+flask_sqlalchemy: En integration af SQLAlchemy til Flask, som bruges til at håndtere databaseoperationer.
+Funktioner
+FaceRecognitionSystem: Denne klasse håndterer alle operationer relateret til ansigtsgenkendelse, herunder lagring af billeder,
+indlæsning af kendte ansigter, sammenligning af ansigter og håndtering af ugenkendte billeder.
+
+__init__: Initialiserer klassens attributter.
+save_image: Gemmer et base64-enkodet billede til en fil.
+load_known_faces: Indlæser kendte ansigter fra en specificeret mappe.
+compare_faces: Sammenligner nye billeder med kendte ansigter.
+handle_unrecognized_images: Håndterer billeder, der ikke er blevet genkendt, ved at flytte dem til en indtrængermappe.
+run_face_recognition: Kører hele ansigtsgenkendelsesprocessen og opdaterer databasen.
+MQTT Callbacks:
+
+on_connect: Håndterer opkoblingen til MQTT-brokeren.
+on_message: Håndterer indgående MQTT-beskeder, dekoder og gemmer billederne, og kører ansigtsgenkendelse.
+Database Modeller:
+
+Worker: Model for arbejdstagere, med felter for id, navn og tidsstempel.
+Intruder: Model for indtrængere, med felter for id, tidsstempel og billedstien.
+Programkørsel
+Konfiguration:
+
+Programmet konfigurerer mapper til at gemme billeder og sætter database URI.
+Initialisering:
+
+Flask applikationen og databasen initialiseres.
+FaceRecognitionSystem initialiseres med de nødvendige mapper.
+MQTT Client:
+
+En MQTT-klient oprettes, forbinder til broker-adressen og abonnerer på det nødvendige emne.
+Hovedfunktion:
+
+main(): Kører hovedprogrammet, initialiserer databasen og starter MQTT-loopet.
+
+Dette program hjælper med at identificere brugere og indtrængere ved hjælp af ansigtsgenkendelse, administrere billeder og opdatere en database baseret på resultaterne af genkendelsesprocessen. 
+Det integrerer flere teknologier og moduler for at levere en omfattende løsning til adgangskontrol i et smart låsesystem.
