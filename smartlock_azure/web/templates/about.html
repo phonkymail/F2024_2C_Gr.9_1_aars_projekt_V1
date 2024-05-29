@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber</title>
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='barber.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: white;
+            font-size: 24px;
+        }
+        .admin-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .admin-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 24px;
+        }
+        .content {
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About Us</a>
+        <a href="{{ url_for('services') }}">Services</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+    </div>
+    <div class="admin-links">
+        <a href="{{ url_for('admin') }}">Admin</a>
+    </div>
+    <div class="content">
+        <h1>aboub us</h1>
+        <p>bal balb dfdfdfdfdfbla.</p>
+    </div>
+</body>
+</html>
+
+
