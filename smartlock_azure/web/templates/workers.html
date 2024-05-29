@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workers</title>
+</head>
+<body>
+    <h1>Workers</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for worker in workers %}
+        <tr>
+            <td>{{ worker.id }}</td>
+            <td>{{ worker.name }}</td>
+            <td>{{ worker.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('admin') }}">Back to Admin</a>
+</body>
+</html>
