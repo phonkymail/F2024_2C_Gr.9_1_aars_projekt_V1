@@ -1,0 +1,50 @@
+### Programbeskrivelse
+
+Dette program er en webapplikation bygget med Flask, som administrerer brugere og indtrængere for et smart låsesystem. 
+Programmet anvender flere moduler til at håndtere brugeroprettelse, login-administration og billedhåndtering.
+
+### Moduler
+
+1. **os**: Bruges til fil- og mappemanipulation.
+2. **flask**: Webrammeværket til at skabe webapplikationen.
+3. **flask_sqlalchemy**: Integration af SQLAlchemy til Flask, der bruges til databaseoperationer.
+4. **flask_bcrypt**: Bruges til hashing og verificering af passwords.
+5. **datetime**: Bruges til håndtering af dato og tid.
+6. **werkzeug.utils**: Indeholder værktøjer som `secure_filename` til sikker filnavnshåndtering.
+
+### Konfiguration
+
+- **SQLALCHEMY_DATABASE_URI**: Stien til SQLite-databasen for brugere.
+- **SQLALCHEMY_BINDS**: Binder flere databaser, herunder en separat til login-oplysninger.
+- **UPLOAD_FOLDER**: Mappen hvor uploadede billeder gemmes.
+- **SECRET_KEY**: Bruges til sessionhåndtering og sikkerhed.
+- **MAX_CONTENT_PATH**: Maksimal filstørrelse for uploads.
+
+### Database Modeller
+
+1. **User**: Model for brugere, der indeholder id, fornavn, efternavn og foto.
+2. **Worker**: Model for arbejdstagere, der indeholder id, navn og tidsstempel.
+3. **Intruder**: Model for indtrængere, der indeholder id, tidsstempel og foto.
+4. **Admin**: Model for administratorer, der indeholder id, brugernavn og hashed password.
+
+### Ruter og Funktioner
+
+1. **process_image_upload**: Funktion til at håndtere billeduploads og gemme dem i den specificerede mappe.
+
+2. **admin**: Rute til at administrere brugere. Tillader oprettelse af nye brugere og viser eksisterende brugere.
+
+3. **serve_image**: Rute til at vise billeder fra upload-mappen.
+
+4. **delete_user**: Rute til at slette en bruger.
+
+5. **view_workers** og **view_intruders**: Ruter til at vise arbejdstagere og indtrængere.
+
+6. **login** og **logout**: Ruter til login og logout af administratorer.
+
+### Skabeloner
+
+Applikationen bruger skabeloner til at generere HTML-sider dynamisk baseret på data fra databasen.
+
+### Kørsel af programmet
+
+Programmet startes ved at køre Flask-udviklingsserveren med `app.run(debug=True)`.
