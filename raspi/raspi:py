@@ -8,7 +8,6 @@ from led import LedRGB
 from rpi_ws281x import Color
 from motor import ServoMotor
 
-# Define MQTT parameters
 broker_address = "192.168.43.144"
 port = 1883
 topic_rasp = "image"
@@ -16,20 +15,20 @@ topic_server = "recognition"
 client_id = "raspi"
 image_folder = "/home/rav/Desktop/1ars/prove/new/"
 os.makedirs(image_folder, exist_ok=True)
-# pins
+
 TRIGGER_PIN = 15
 ECHO_PIN = 14
 SERVO_PIN = 26  
 motor = ServoMotor(SERVO_PIN)
-#objetcs
+
 sensor_ult = DistanceSensor(TRIGGER_PIN, ECHO_PIN)
 led_rgb = LedRGB()
 
-# Global flag to indicate message received
+
 message_received = False
 message_payload = ""
 
-# Function to capture images
+
 def capture_images(image_folder, num_images, delay):
     camera = PiCamera()
     camera.resolution = (640, 480)
@@ -43,7 +42,7 @@ def capture_images(image_folder, num_images, delay):
         sleep(delay)
     camera.close()
 
-# MQTT on_connect callback
+# 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected to MQTT Broker!")
@@ -51,7 +50,7 @@ def on_connect(client, userdata, flags, rc):
     else:
         print(f"Failed to connect, return code {rc}\n")
 
-# MQTT on_message callback
+# 
 def on_message(client, userdata, msg):
     global message_received, message_payload
     try:
@@ -62,7 +61,7 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print(f"Error decoding message: {e}")
 
-# Function to encode and publish an image
+# 
 def publish_image(image_path, client):
     try:
         with open(image_path, "rb") as image_file:
@@ -74,31 +73,31 @@ def publish_image(image_path, client):
     except Exception as e:
         print(f"Error encoding or publishing image: {e}")
 
-# Function to measure distance in a loop
+# 
 def measure_distance_loop():
     while True:
         distance = sensor_ult.measure_distance()
         print(f"Distance: {distance} cm")
-#distace under 80
+#
         if distance < 80:
             led_rgb.set_color(Color(255, 255, 255))  
             led_rgb.set_color(Color(0, 0, 0))  
-#distace under 40
+#
         if distance < 40:
-            # Capture images
+            # 
             capture_images(image_folder, 3, 0.5)
             sleep(3) 
-            # Create a new MQTT client instance
+            # 
             client = mqtt.Client(client_id)
-            # Assign event callbacks
+            # 
             client.on_connect = on_connect
             client.on_message = on_message
-            # Connect to the MQTT broker
+            # 
             client.connect(broker_address, port)
             sleep(0.5)
-            # Start the MQTT client
+            # 
             client.loop_start()
-            # Publish images
+            #
             for file in os.listdir(image_folder):
                 image_path = os.path.join(image_folder, file)
                 publish_image(image_path, client)
@@ -106,13 +105,13 @@ def measure_distance_loop():
 
             print("Finished publishing images. Waiting for responses...")
 
-            # Wait for a message
+            # 
             global message_received, message_payload
             message_received = False
             while not message_received:
                 sleep(0.1)
 
-            # Process the message
+            # 
             if message_payload == "no permission":
                 led_rgb.set_color(Color(255, 0, 0))  # Red color
             else:
@@ -125,9 +124,9 @@ def measure_distance_loop():
 
             client.loop_stop()
             client.disconnect()
-#wait for another loop
+#w
         sleep(5)  
-#main logic encapsul.
+#
 def main():
     measure_distance_loop()
 
