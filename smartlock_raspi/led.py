@@ -3,7 +3,7 @@ from rpi_ws281x import PixelStrip, Color
 
 class LedRGB:
     def __init__(self):
-# LED strip configuration:
+# 
         self.LED_COUNT = 3       
         self.LED_PIN = 13           
         self.LED_FREQ_HZ = 800000      
@@ -13,13 +13,13 @@ class LedRGB:
         self.LED_CHANNEL = 1             
         self.strip = PixelStrip(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS, self.LED_CHANNEL)
         self.strip.begin()
-#method turn on coulor cons.
+#
     def set_color(self, color):
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
         self.strip.show()
 
-#mothod turn on color blink
+#
     def blink_sequence(self, color, delay):
         for _ in range(5):  # Repeat the sequence 5 times
             for i in range(self.strip.numPixels()):
