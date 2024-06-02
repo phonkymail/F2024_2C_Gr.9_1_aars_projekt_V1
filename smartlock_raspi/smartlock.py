@@ -13,7 +13,7 @@ from lib_oled96 import ssd1306
 from solenoide import MosfetController
 
 
-# Define MQTT parameters
+#
 broker_address = "192.168.43.144"
 port = 1883
 topic_rasp = "image"
@@ -21,14 +21,14 @@ topic_server = "recognition"
 client_id = "raspi"
 image_folder = "/home/rav/Desktop/1ars/smartlock/new/"
 os.makedirs(image_folder, exist_ok=True)
-# Pins
+# 
 TRIGGER_PIN = 15
 ECHO_PIN = 14
 SERVO_PIN = 26  
 Doorsensor_PIN = 23
 solenodie_PIN = 5
 door_PIN = 23
-# Objects
+# 
 sensor_ult = DistanceSensor(TRIGGER_PIN, ECHO_PIN)
 led_rgb = LedRGB()
 door_sensor = DoorSensor(Doorsensor_PIN)
@@ -38,11 +38,11 @@ oled = ssd1306(i2cbus)
 pumpe_controller = MosfetController(solenodie_PIN)
 
 
-# Global flag to indicate message received
+#
 message_received = False
 message_payload = ""
 
-#dunction to oled
+#
 def turnoff_display():
     oled.onoff(0)
 def text_display(line1_text, line1_pos, line2_text, line2_pos, line3_text, line3_pos):
@@ -51,7 +51,7 @@ def text_display(line1_text, line1_pos, line2_text, line2_pos, line3_text, line3
     oled.canvas.text(line2_pos, line2_text, fill=1)  # Line 2
     oled.canvas.text(line3_pos, line3_text, fill=1)  # Line 3
     oled.display()
-# Function to capture images
+# 
 def capture_images(image_folder, num_images, delay):
     camera = PiCamera()
     camera.resolution = (640, 480)
@@ -65,7 +65,7 @@ def capture_images(image_folder, num_images, delay):
         sleep(delay)
     camera.close()
 
-# MQTT on_connect callback
+# 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected to MQTT Broker!")
@@ -73,7 +73,7 @@ def on_connect(client, userdata, flags, rc):
     else:
         print(f"Failed to connect, return code {rc}\n")
 
-# MQTT on_message callback
+# 
 def on_message(client, userdata, msg):
     global message_received, message_payload
     try:
@@ -84,7 +84,7 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print(f"Error decoding message: {e}")
 
-# Function to encode and publish an image
+# 
 def publish_image(image_path, client):
     try:
         with open(image_path, "rb") as image_file:
@@ -124,22 +124,22 @@ def measure_distance_loop():
             text_display('welcome', (40, 5), 'come closer', (40, 25), 'to camera', (40, 45))
         # Distance under 40 cm
         if distance < 40:
-            # Capture images
+            # 
             capture_images(image_folder, 3, 0.5)
             led_rgb.set_color(Color(0, 0, 60))
             sleep(3)
             text_display('please', (40, 5), 'wait', (40, 25), 'processing', (40, 45))
-            # Create a new MQTT client instance
+            #
             client = mqtt.Client(client_id)
-            # Assign event callbacks
+            #
             client.on_connect = on_connect
             client.on_message = on_message
-            # Connect to the MQTT broker
+            #
             client.connect(broker_address, port)
             sleep(0.5)
-            # Start the MQTT client
+            # 
             client.loop_start()
-            # Publish images
+            # 
             for file in os.listdir(image_folder):
                 image_path = os.path.join(image_folder, file)
                 publish_image(image_path, client)
@@ -147,13 +147,13 @@ def measure_distance_loop():
 
             print("Finished publishing images. Waiting for responses...")
 
-            # Wait for a message
+            # 
             global message_received, message_payload
             message_received = False
             while not message_received:
                 sleep(0.1)
 
-            # Process the message
+            # 
             if message_payload == "no permission":
                 led_rgb.set_color(Color(255, 0, 0))  # Red color
                 text_display('you dont', (40, 5), 'have', (40, 25), 'permission', (40, 45))
@@ -177,7 +177,7 @@ def measure_distance_loop():
             client.disconnect()
         sleep(3)
 
-# Main logic encapsulation
+# 
 def main():
     measure_distance_loop()
 
