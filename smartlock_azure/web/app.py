@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
-# Configuration
+#
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_BINDS'] = {
@@ -16,13 +16,13 @@ app.config['UPLOAD_FOLDER'] = '/home/rav/Desktop/smartlock/main/upload'
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['MAX_CONTENT_PATH'] = 1024 * 1024 * 10
 
-# Ensure the upload folder exists
+# 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
-# Models
+#
 class User(db.Model):
     __tablename__ = 'user'
     __bind_key__ = 'users_db'
@@ -55,11 +55,11 @@ class Admin(db.Model):
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
 
-# Create the databases
+#
 with app.app_context():
     db.create_all()
 
-# Function to handle image upload
+# 
 def process_image_upload(photo):
     if photo:
         filename = secure_filename(photo.filename)
@@ -68,7 +68,7 @@ def process_image_upload(photo):
         return filename
     return None
 
-# Route to handle form submission
+#
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if 'admin_logged_in' not in session:
@@ -90,12 +90,12 @@ def admin():
     users = User.query.all()
     return render_template('admin.html', users=users)
 
-# Route to serve image from the upload folder
+# 
 @app.route('/home/rav/Desktop/smartlock/main/upload/<filename>')
 def serve_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# Route to delete a user entry
+# 
 @app.route('/delete/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
     if 'admin_logged_in' not in session:
@@ -132,7 +132,7 @@ def view_intruders():
     intruders = Intruder.query.all()
     return render_template('intruders.html', intruders=intruders)
 
-# Route for login
+# 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -144,28 +144,28 @@ def login():
             return redirect(url_for('admin'))
     return render_template('login.html')
 
-# Route for logout
+# 
 @app.route('/logout')
 def logout():
     session.pop('admin_logged_in', None)
     return redirect(url_for('index'))
 
-# Route for About Us page
+# 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-# Route for Services page
+# 
 @app.route('/services')
 def services():
     return render_template('services.html')
 
-# Route for Contact page
+#
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
-# Route for home page
+#
 @app.route('/')
 def home():
     return render_template('index.html')
