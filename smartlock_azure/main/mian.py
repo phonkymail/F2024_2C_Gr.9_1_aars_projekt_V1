@@ -19,18 +19,18 @@ os.makedirs(save_directory, exist_ok=True)
 os.makedirs(imagebase_folder, exist_ok=True)
 os.makedirs(intruder_folder, exist_ok=True)
 
-# conf of users.db
+#
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/rav/Desktop/smartlock/web/instance/users.db'
 db = SQLAlchemy(app)
 
-# workers database
+# 
 class Worker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-# intruder database
+#
 class Intruder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -104,7 +104,7 @@ class FaceRecognitionSystem:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 intruder_image_path = os.path.join(self.intruder_folder, f"intruder_{timestamp}_{file}")
                 os.rename(new_image_path, intruder_image_path)
-#save itruder to db
+#
                 with app.app_context():
                     intruder = Intruder(timestamp=datetime.now(), image=intruder_image_path)
                     db.session.add(intruder)
@@ -116,7 +116,7 @@ class FaceRecognitionSystem:
         known_face_encodings, known_face_names = self.load_known_faces()
         recognized_files = self.compare_faces(known_face_encodings, known_face_names)
         self.handle_unrecognized_images(recognized_files)
-        # save workers to db
+        #
         with app.app_context():
             for recognized_file in recognized_files:
                 worker = Worker(name=recognized_file)
